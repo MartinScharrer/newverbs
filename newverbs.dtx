@@ -99,7 +99,7 @@
 % This macros allow the definition of \cs{verb} variants. The verbatim content is processed using \cs{verb}, but the
 % variants can add \TeX\ code before and after it.
 % The syntax is \cs{\ldots verbcommand}\marg{macro}\marg{code before}\marg{code after}.
-% The three definition macros use |\newcommand*|, |\renewcommand*| and |\providecommand*| internal to define \meta{macro}, respectively.
+% The three definition macros use |\newcommand*|, |\renewcommand*| and |\providecommand*| internally to define \meta{macro}, respectively.
 % Afterwards \meta{macro} can be used like \cs{verb}. The star version of \meta{macro} will use \cs{verb}|*|.
 %
 % See the implementation of \cs{qverb} in section~\ref{sec:impl} for an example.
@@ -115,8 +115,8 @@
 % They can be redefined by the user if required.
 %
 % Using \cs{qverb}\meta{char}\meta{verbatim material}\meta{char} is equal to \\
-% \cs{qverbbeginquote}\cs{verb}\meta{char}\meta{verbatim material}\meta{char}\cs{qverbbeginquote}, or\\
-% |`|\cs{verb}\meta{char}\meta{verbatim material}\meta{char}|'|\\
+% \cs{qverbbeginquote}\cs{verb}\meta{char}\meta{verbatim material}\meta{char}\cs{qverbendquote}, or\\
+% |`|\cs{verb}\meta{char}\meta{verbatim material}\meta{char}|'| 
 % when the default definition of the quote macros is used.
 %
 % \DescribeMacro\fverb
@@ -137,7 +137,7 @@
 % \cs{verb}\optstar\meta{char}\meta{verbatim material}\meta{char}.
 %
 % The new macro \cs{MakeSpecialShortVerb}\optstar\marg{\cs{verb} variant}|{\|\meta{char}|}| does the same, but 
-% instead of \cs{verb}\optstar\ it uses a \meta{\cs{verb} variant} which needs to be defined using \cs{newverbcommand}.
+% instead of \cs{verb}\optstar\ it uses a \meta{\cs{verb} variant}\optstar{} which needs to be defined using \cs{newverbcommand}.
 % The package \pkg{shortvrb} must be loaded by the user in order to make this macro work. It is not loaded automatically by \pkg{newverbs}.
 %
 % The special meaning of \meta{char} can be removed using \pkg{shortvrb}'s \cs{DeleteShortVerb}, i.e.\ the same way as for 
@@ -153,7 +153,7 @@
 % \section{Compatibility with other verbatim packages}
 % The compatibility with other verbatim packages is not tested yet. This package relies on the normal internal definition of \cs{verb}
 % and \cs{MakeShortVerb}. Any package which changes these might break this package.
-% Users which encounter incapabilities should not hesitate to contact the package author (with details!).
+% Users which encounter incompatibilities should not hesitate to contact the package author (with details!).
 %
 % \StopEventually{}
 % \section{Implementation}
@@ -196,7 +196,7 @@
 % \begin{macro}{\newverbcommand@settings}
 % Some settings required for all new \cs{verb}-like commands.
 % The original end group macro from \cs{verb} is saved away.
-% Also the temp box a is provided with a user friendly name.
+% Also the `temp box a' is provided with a user friendly name.
 %    \begin{macrocode}
 \def\newverbcommand@settings{%
   \let\verb@orig@egroup\verb@egroup
