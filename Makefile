@@ -42,7 +42,10 @@ reload:
 
 example:
 
-ctanify: ${PACKFILES}
+pdfopt:
+	pdfopt ${PACKAGE}.pdf opt_${PACKAGE}.pdf && mv opt_${PACKAGE}.pdf ${PACKAGE}.pdf
+
+ctanify: ${PACKFILES} | pdfopt
 	ctanify $^
 
 one_run: ${PACKAGE}.dtx
@@ -87,6 +90,7 @@ ${PACKAGE}%.zip: ${PACKFILES}
 	@echo "ZIP file $@ created!"
 
 tds: .tds
+	
 
 .tds: ${PACKAGE_STY} ${PACKAGE_DOC} ${PACKAGE_SRC}
 	@test -n "${IGNORE_CHECKSUM}" || grep -q '^\\OnlyDescription' ${PACKAGE}.dtx || grep -q '\* Checksum passed \*' ${PACKAGE}.log
@@ -120,52 +124,4 @@ uninstall:
 	test -d "${TEXMFDIR}" && ${RM} -rv "${TEXMFDIR}/tex/latex/${PACKAGE}" \
 	"${TEXMFDIR}/doc/latex/${PACKAGE}" "${TEXMFDIR}/source/latex/${PACKAGE}" && texhash ${TEXMFDIR}
 
-test: test.pdf
-
-test.pdf: ${PACKAGE}.sty test.tex
-	pdflatex test
-	pdfcrop test.pdf
-
-CHARS=H L Z X M U D T C ""
-
-ACHARS='N(a)' [] ';' H L Z X M U U{A} D D{A} G T tt C cc E ee
-
-acompare: ${PACKAGE}.sty test2.tex
-	for a in ${ACHARS}; do \
-		echo "$$a"; \
-		pdflatex -jobname "test-$$a" "\\def\\a{$$a}\\input{test2}";\
-		compare -density 500 "test-$$a.pdf[0]" "test-$$a.pdf[1]" "diff-$${a}_0x1.png"; \
-		compare -density 500 "test-$$a.pdf[0]" "test-$$a.pdf[2]" "diff-$${a}_0x2.png"; \
-		compare -density 500 "test-$$a.pdf[0]" "test-$$a.pdf[3]" "diff-$${a}_0x3.png"; \
-		compare -density 500 "test-$$a.pdf[1]" "test-$$a.pdf[2]" "diff-$${a}_1x2.png"; \
-		compare -density 500 "test-$$a.pdf[1]" "test-$$a.pdf[3]" "diff-$${a}_1x3.png"; \
-		compare -density 500 "test-$$a.pdf[2]" "test-$$a.pdf[3]" "diff-$${a}_2x3.png"; \
-	done
-
-icompare: ${PACKAGE}.sty test.tex
-	rm -f new-*.* old-*.* diff-*.*
-	for I in ${CHARS}; do \
-		pdflatex -jobname "new-$$I" "\\def\\I{$$I}\\input{test}";\
-	  mv ${PACKAGE}.sty ${PACKAGE}.sty.save; \
-		pdflatex -jobname "old-$$I" "\\def\\I{$$I}\\input{test}";\
-	  mv ${PACKAGE}.sty.save ${PACKAGE}.sty; \
-		P=$$(( $$(pdfinfo new-$$I.pdf | grep ^Pages: | cut -d: -f2) - 1 )); \
-		for N in $$(seq -w 0 $$P); do \
-		  compare -density 500 old-$$I.pdf[$$N] new-$$I.pdf[$$N] diff-$$I-$$N.png; \
-	  done; \
-	done
-
-compare: ${PACKAGE}.sty test.tex
-	rm -f new*.* old*.* diff*.*
-	pdflatex test
-	pdfcrop test.pdf new.pdf
-	mv ${PACKAGE}.sty ${PACKAGE}.sty.save;
-	pdflatex test
-	pdfcrop test.pdf old.pdf
-	mv ${PACKAGE}.sty.save ${PACKAGE}.sty;
-	P=$$(( $$(pdfinfo new.pdf | grep ^Pages: | cut -d: -f2) - 1 )); \
-	for N in $$(seq -w 0 $$P); do \
-		echo -n "$$N: "; \
-		compare -density 500 -metric MAE old.pdf[$$N] new.pdf[$$N] diff-$$N.png; \
-	done
 

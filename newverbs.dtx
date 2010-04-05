@@ -18,9 +18,10 @@
 %% This work consists of the files newverbs.dtx and newverbs.ins
 %% and the derived file newverbs.sty.
 %</copyright>
-% \fi
+%<*!copyright>
 %
-% \iffalse
+%% $Id$
+%
 %<*driver>
 \ProvidesFile{newverbs.dtx}
 %</driver>
@@ -90,7 +91,7 @@
 %
 % \section{Usage}
 %
-% \subsection{Defining new variants of \cs{verb}}
+% \subsection{Defining new variants of \texorpdfstring{\cs{verb}}{'verb'}}
 %
 % \DescribeMacro\newverbcommand
 % \DescribeMacro\renewverbcommand
@@ -104,7 +105,8 @@
 % See the implementation of \cs{qverb} in section~\ref{sec:impl} for an example.
 %
 %
-% \subsection{Provided \cs{verb} variants}
+% \subsection{Provided \texorpdfstring{\cs{verb}}{'verb'} variants}
+%
 % Two \cs{verb} variants are provided (i.e. with \cs{provideverbcommand}) by default.
 %
 % \DescribeMacro\qverb
@@ -126,7 +128,7 @@
 % \hspace*{10em}|{\end{lrbox}\mycommand{\usebox{\verbbox}}}|}\\
 % The temporary box \cs{verbbox} is only provided inside a |\...verbcommand|.
 %
-% \subsection{Using \cs{verb} variants with short verbatim character}
+% \subsection{Using \texorpdfstring{\cs{verb}}{'verb'} variants with short verbatim character}
 %
 % \DescribeMacro\MakeSpecialShortVerb
 % This package also defines a special version of the \cs{MakeShortVerb} macro from the \pkg{shortvrb} package.
@@ -153,7 +155,7 @@
 % and \cs{MakeShortVerb}. Any package which changes these might break this package.
 % Users which encounter incapabilities should not hesitate to contact the package author (with details!).
 %
-% \StopEventually
+% \StopEventually{}
 % \section{Implementation}
 % \iffalse
 %<*package>
