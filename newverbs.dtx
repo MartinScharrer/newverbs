@@ -1,0 +1,253 @@
+% \iffalse
+%<*copyright>
+%% Copyright (c) 2010 by Martin Scharrer <martin@scharrer-online.de>
+%% WWW: http://latex.scharrer-online.de/
+%%
+%% This work may be distributed and/or modified under the
+%% conditions of the LaTeX Project Public License, either version 1.3
+%% of this license or (at your option) any later version.
+%% The latest version of this license is in
+%%  http://www.latex-project.org/lppl.txt
+%% and version 1.3 or later is part of all distributions of LaTeX
+%% version 2005/12/01 or later.
+%%
+%% This work has the LPPL maintenance status `maintained'.
+%%
+%% The Current Maintainer of this work is Martin Scharrer.
+%%
+%% This work consists of the files newverbs.dtx and newverbs.ins
+%% and the derived file newverbs.sty.
+%</copyright>
+% \fi
+%
+% \iffalse
+%<*driver>
+\ProvidesFile{newverbs.dtx}
+%</driver>
+%<package>\ProvidesPackage{newverbs}
+%<*package|driver>
+  [2010/04/05 v1.0 Define new 'verb' commands and short verb. characters]
+%</package|driver>
+%
+%<*driver>
+\documentclass{ltxdoc}
+\usepackage{hyperref}
+\usepackage{xcolor}
+
+\GetFileInfo{newverbs.dtx}
+\usepackage{newverbs}[\filedate]
+\usepackage{shortvrb}
+
+\MakeSpecialShortVerb{\qverb}{\"}
+
+%\EnableCrossrefs
+%\CodelineIndex
+%\RecordChanges
+\providecommand*{\pkg}{\texttt}
+\providecommand*{\optstar}{\textcolor{gray}{\texttt{*}}}
+\begin{document}
+  \DocInput{newverbs.dtx}
+  %\PrintChanges
+  %\PrintIndex
+\end{document}
+%</driver>
+% \fi
+%
+% \CheckSum{58}\relax
+%
+% \CharacterTable
+%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
+%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
+%   Digits        \0\1\2\3\4\5\6\7\8\9
+%   Exclamation   \!     Double quote  \"     Hash (number) \#
+%   Dollar        \$     Percent       \%     Ampersand     \&
+%   Acute accent  \'     Left paren    \(     Right paren   \)
+%   Asterisk      \*     Plus          \+     Comma         \,
+%   Minus         \-     Point         \.     Solidus       \/
+%   Colon         \:     Semicolon     \;     Less than     \<
+%   Equals        \=     Greater than  \>     Question mark \?
+%   Commercial at \@     Left bracket  \[     Backslash     \\
+%   Right bracket \]     Circumflex    \^     Underscore    \_
+%   Grave accent  \`     Left brace    \{     Vertical bar  \|
+%   Right brace   \}     Tilde         \~}
+%
+%
+% \changes{v1.0}{2010/04/05}{Initial version}
+%
+% \DoNotIndex{\newcommand,\newenvironment,\providecommand}
+%
+% \GetFileInfo{newverbs.dtx}
+% \title{The \textsf{newverbs} package}
+% \author{Martin Scharrer \\ \texttt{martin@scharrer-online.de}}
+% \date{\fileversion\ from \filedate}
+%
+% \maketitle
+% \begin{abstract}
+% This package allows the definition of \cs{verb} variants which add \TeX\ code before and after the verbatim text.
+% When used together with the \pkg{shortvrb} package it allows the definition of short verbatim characters which use this variants
+% instead of the normal \cs{verb}.
+% \end{abstract}
+%
+% \section{Usage}
+%
+% \subsection{Defining new variants of \cs{verb}}
+%
+% \DescribeMacro\newverbcommand
+% \DescribeMacro\renewverbcommand
+% \DescribeMacro\provideverbcommand
+% This macros allow the definition of \cs{verb} variants. The verbatim content is processed using \cs{verb}, but the
+% variants can add \TeX\ code before and after it.
+% The syntax is \cs{\ldots verbcommand}\marg{macro}\marg{code before}\marg{code after}.
+% The three definition macros use |\newcommand*|, |\renewcommand*| and |\providecommand*| internal to define \meta{macro}, respectively.
+% Afterwards \meta{macro} can be used like \cs{verb}. The star version of \meta{macro} will use \cs{verb}|*|.
+%
+% See the implementation of \cs{qverb} in section~\ref{sec:impl} for an example.
+%
+%
+% \subsection{Provided \cs{verb} variants}
+% Two \cs{verb} variants are provided (i.e. with \cs{provideverbcommand}) by default.
+%
+% \DescribeMacro\qverb
+% This macro adds quote characters around the verbatim material.
+% Two macros are used to insert the quotes: \cs{qverbbeginquote} (`) and \cs{qverbendquote} (').
+% They can be redefined by the user if required.
+%
+% Using \cs{qverb}\meta{char}\meta{verbatim material}\meta{char} is equal to \\
+% \cs{qverbbeginquote}\cs{verb}\meta{char}\meta{verbatim material}\meta{char}\cs{qverbbeginquote}, or\\
+% |`|\cs{verb}\meta{char}\meta{verbatim material}\meta{char}|'|\\
+% when the default definition of the quote macros is used.
+%
+% \DescribeMacro\fverb
+% This macro adds a frame (|\fbox{}|) around the verbatim text (|\fverb+$&^_%$+| $\to$ \fverb+$&^_$+).
+% A \TeX\ box is used to store the content first, then the box is framed.
+% The user can define similar command using the following code:\\
+% {\ttfamily
+% \hspace*{2.5em}|\newverbcommand{\myverb}{\begin{lrbox}{\verbbox}}|\\
+% \hspace*{10em}|{\end{lrbox}\mycommand{\usebox{\verbbox}}}|}\\
+% The temporary box \cs{verbbox} is only provided inside a |\...verbcommand|.
+%
+% \subsection{Using \cs{verb} variants with short verbatim character}
+%
+% \DescribeMacro\MakeSpecialShortVerb
+% This package also defines a special version of the \cs{MakeShortVerb} macro from the \pkg{shortvrb} package.
+% The orignal command \cs{MakeShortVerb}\optstar|{\|\meta{char}|}| changes the meaning of \meta{char} so that 
+% \meta{char}\meta{verbatim material}\meta{char} is a shorter alternative to
+% \cs{verb}\optstar\meta{char}\meta{verbatim material}\meta{char}.
+%
+% The new macro \cs{MakeSpecialShortVerb}\optstar\marg{\cs{verb} variant}|{\|\meta{char}|}| does the same, but 
+% instead of \cs{verb}\optstar\ it uses a \meta{\cs{verb} variant} which needs to be defined using \cs{newverbcommand}.
+% The package \pkg{shortvrb} must be loaded by the user in order to make this macro work. It is not loaded automatically by \pkg{newverbs}.
+%
+% The special meaning of \meta{char} can be removed using \pkg{shortvrb}'s \cs{DeleteShortVerb}, i.e.\ the same way as for 
+% characters defined with the normal \cs{MakeShortVerb}.
+% If a character was already made a short verbatim character it must be ``deleted'' before it can be redefined by \cs{MakeShortVerb} or
+% \cs{MakeSpecialShortVerb}.
+%
+% \bigskip\noindent\textbf{Examples:}\\
+% |\MakeSpecialShortVerb{\qverb}{\"}| will make `|"|' a short, quoting verbatim character: |"$^&$"| $\to$ "$^&$".\\
+% |\DeleteShortVerb{\"}\MakeSpecialShortVerb{\fverb}{\"}| will change it definition to use \cs{fverb}: \fverb+$^&$+.
+%
+%
+% \section{Compatibility with other verbatim packages}
+% The compatibility with other verbatim packages is not tested yet. This package relies on the normal internal definition of \cs{verb}
+% and \cs{MakeShortVerb}. Any package which changes these might break this package.
+% Users which encounter incapabilities should not hesitate to contact the package author (with details!).
+%
+% \StopEventually
+% \section{Implementation}
+% \iffalse
+%<*package>
+% \fi
+%
+% \subsection{Verb Definition Commands}
+%
+% \begin{macro}{\newverbcommand}
+% \begin{macro}{\renewverbcommand}
+% \begin{macro}{\provideverbcommand}
+% This macro calls the real macro with the to be used definition macro.
+%    \begin{macrocode}
+\newcommand*\newverbcommand{\new@verbcommand\newcommand}
+\newcommand*\renewverbcommand{\new@verbcommand\renewcommand}
+\newcommand*\provideverbcommand{\new@verbcommand\providecommand}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\new@verbcommand}
+% Depending on |#1| a macro given by |#2| is (re-)defined/provided.
+% The code given by |#3| and |#4| is placed before and after the verb command.
+% The trailing code is inserted by patching \cs{verb@egroup} which is called by \cs{verb}
+% after the verbatim content.
+%    \begin{macrocode}
+\def\new@verbcommand#1#2#3#4{%
+  #1*#2{%
+    \begingroup
+    \newverbcommand@settings
+    \def\verb@egroup{\verb@orig@egroup#4\endgroup}%
+    #3\verb
+  }%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\newverbcommand@settings}
+% Some settings required for all new \cs{verb}-like commands.
+% The original end group macro from \cs{verb} is saved away.
+% Also the temp box a is provided with a user friendly name.
+%    \begin{macrocode}
+\def\newverbcommand@settings{%
+  \let\verb@orig@egroup\verb@egroup
+  \let\verbbox\@tempboxa
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \subsection{Provided New Verb Commands}\label{sec:impl}
+%
+% \begin{macro}{\qverb}
+% Quoting version of \cs{verb}. Places a quote character before and after the verbatim content: "verb".
+%    \begin{macrocode}
+\provideverbcommand{\qverb}{\qverbbeginquote}{\qverbendquote}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\qverbbeginquote}
+% \begin{macro}{\qverbendquote}
+% This macros insert the actual quotes. They can be redefined by the user to contain the required quotes.
+%    \begin{macrocode}
+\def\qverbbeginquote{`}
+\def\qverbendquote{'}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\fverb}
+% A framed version of \cs{verb}. Stores the verbatim content first into a box. Then the box content is framed.
+%    \begin{macrocode}
+\newverbcommand{\fverb}
+  {\setbox\verbbox\hbox\bgroup\color@setgroup}
+  {\color@endgroup\egroup\fbox{\box\verbbox}}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \subsection{Make Special Short Verbatim Characters}
+%
+% \begin{macro}{\MakeSpecialShortVerb}
+% Uses the definition of \cs{MakeShortVerb} from \pkg{shortvrb} except with \cs{verb} replaced with the first argument.
+% The second argument is then read by \cs{@MakeShortVerb}.
+%    \begin{macrocode}
+\newcommand*\MakeSpecialShortVerb[1]{%
+  \@ifstar
+    {\def\@shortvrbdef{#1*}\@MakeShortVerb}%
+    {\def\@shortvrbdef{#1}\@MakeShortVerb}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \iffalse
+%</package>
+% \fi
+% \Finale
+\endinput

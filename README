@@ -1,0 +1,10 @@
+The 'newverbs' LaTeX package
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This package allows the definition of \verb variants which add TeX code before and after the verbatim text.
+When used together with the 'shortvrb' package it allows the definition of short verbatim characters which use this variants
+instead of the normal \verb.
+
+Copyright (c) 2010 by Martin Scharrer <martin@scharrer-online.de>
+WWW: http://latex.scharrer-online.de/
+
