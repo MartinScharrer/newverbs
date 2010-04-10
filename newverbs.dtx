@@ -31,7 +31,7 @@
 %</package|driver>
 %
 %<*driver>
-\documentclass{ltxdoc}
+\documentclass{ydoc}
 \usepackage{hyperref}
 \usepackage{xcolor}
 
@@ -40,12 +40,9 @@
 \usepackage{shortvrb}
 
 \MakeSpecialShortVerb{\qverb}{\"}
-
 %\EnableCrossrefs
 %\CodelineIndex
 %\RecordChanges
-\providecommand*{\pkg}{\texttt}
-\providecommand*{\optstar}{\textcolor{gray}{\texttt{*}}}
 \begin{document}
   \DocInput{newverbs.dtx}
   %\PrintChanges
@@ -91,35 +88,34 @@
 %
 % \section{Usage}
 %
-% \subsection{Defining new variants of \texorpdfstring{\cs{verb}}{'verb'}}
+% \subsection{Defining new variants of \cs{verb}}
 %
-% \DescribeMacro\newverbcommand
-% \DescribeMacro\renewverbcommand
-% \DescribeMacro\provideverbcommand
+% \DescribeMacro\newverbcommand     {<\textbackslash macro>}{<code before>}{<code after>}
+% \DescribeMacro\renewverbcommand   {<\textbackslash macro>}{<code before>}{<code after>}
+% \DescribeMacro\provideverbcommand {<\textbackslash macro>}{<code before>}{<code after>}
 % This macros allow the definition of \cs{verb} variants. The verbatim content is processed using \cs{verb}, but the
 % variants can add \TeX\ code before and after it.
-% The syntax is \cs{\ldots verbcommand}\marg{macro}\marg{code before}\marg{code after}.
 % The three definition macros use |\newcommand*|, |\renewcommand*| and |\providecommand*| internally to define \meta{macro}, respectively.
 % Afterwards \meta{macro} can be used like \cs{verb}. The star version of \meta{macro} will use \cs{verb}|*|.
 %
 % See the implementation of \cs{qverb} in section~\ref{sec:impl} for an example.
 %
 %
-% \subsection{Provided \texorpdfstring{\cs{verb}}{'verb'} variants}
+% \subsection{Provided \cs{verb} variants}
 %
 % Two \cs{verb} variants are provided (i.e. with \cs{provideverbcommand}) by default.
 %
-% \DescribeMacro\qverb
+% \DescribeMacro\qverb<char><verbatim material><char>
 % This macro adds quote characters around the verbatim material.
 % Two macros are used to insert the quotes: \cs{qverbbeginquote} (`) and \cs{qverbendquote} (').
 % They can be redefined by the user if required.
 %
-% Using \cs{qverb}\meta{char}\meta{verbatim material}\meta{char} is equal to \\
-% \cs{qverbbeginquote}\cs{verb}\meta{char}\meta{verbatim material}\meta{char}\cs{qverbendquote}, or\\
-% |`|\cs{verb}\meta{char}\meta{verbatim material}\meta{char}|'| 
+% Using \Macro\qverb<char><verbatim material><char> is equal to \\
+% \Macro\qverbbeginquote\AlsoMacro\verb<char><verbatim material><char>\AlsoMacro\qverbendquote, or\\
+% \MacroArgs'`'\AlsoMacro\verb<char><verbatim material><char>''
 % when the default definition of the quote macros is used.
 %
-% \DescribeMacro\fverb
+% \DescribeMacro\fverb<char><verbatim material><char>
 % This macro adds a frame (|\fbox{}|) around the verbatim text (|\fverb+$&^_%$+| $\to$ \fverb+$&^_$+).
 % A \TeX\ box is used to store the content first, then the box is framed.
 % The user can define similar command using the following code:\\
@@ -128,16 +124,16 @@
 % \hspace*{10em}|{\end{lrbox}\mycommand{\usebox{\verbbox}}}|}\\
 % The temporary box \cs{verbbox} is only provided inside a |\...verbcommand|.
 %
-% \subsection{Using \texorpdfstring{\cs{verb}}{'verb'} variants with short verbatim character}
+% \subsection{Using \cs{verb} variants with short verbatim character}
 %
-% \DescribeMacro\MakeSpecialShortVerb
+% \DescribeMacro\MakeSpecialShortVerb*{<\textbackslash macro>}{\textbackslash\meta{char}}
 % This package also defines a special version of the \cs{MakeShortVerb} macro from the \pkg{shortvrb} package.
-% The orignal command \cs{MakeShortVerb}\optstar|{\|\meta{char}|}| changes the meaning of \meta{char} so that 
-% \meta{char}\meta{verbatim material}\meta{char} is a shorter alternative to
-% \cs{verb}\optstar\meta{char}\meta{verbatim material}\meta{char}.
+% The orignal command \Macro\MakeShortVerb*{\textbackslash\meta{char}} changes the meaning of \meta{char} so that 
+% \MacroArgs<char><verbatim material><char>\ is a shorter alternative to
+% \Macro\verb*<char><verbatim material><char>.
 %
-% The new macro \cs{MakeSpecialShortVerb}\optstar\marg{\cs{verb} variant}|{\|\meta{char}|}| does the same, but 
-% instead of \cs{verb}\optstar\ it uses a \meta{\cs{verb} variant}\optstar{} which needs to be defined using \cs{newverbcommand}.
+% The new macro \Macro\MakeSpecialShortVerb*{\textbackslash\meta{verb variant}}{\textbackslash\meta{char}} does the same, but 
+% instead of \Macro\verb*\relax\relax\ it uses a \MacroArgs'\'<verb variant>*\relax which needs to be defined using \cs{newverbcommand}.
 % The package \pkg{shortvrb} must be loaded by the user in order to make this macro work. It is not loaded automatically by \pkg{newverbs}.
 %
 % The special meaning of \meta{char} can be removed using \pkg{shortvrb}'s \cs{DeleteShortVerb}, i.e.\ the same way as for 
@@ -176,9 +172,7 @@
 % \end{macro}
 % \end{macro}
 %
-% \begin{macro}{\new@verbcommand}
-% Depending on |#1| a macro given by |#2| is (re-)defined/provided.
-% The code given by |#3| and |#4| is placed before and after the verb command.
+% \begin{macro}{\new@verbcommand}[4]{underlying definition macro}{macro to define}{code before}{code after}
 % The trailing code is inserted by patching \cs{verb@egroup} which is called by \cs{verb}
 % after the verbatim content.
 %    \begin{macrocode}
@@ -236,7 +230,7 @@
 %
 % \subsection{Make Special Short Verbatim Characters}
 %
-% \begin{macro}{\MakeSpecialShortVerb}
+% \begin{macro}{\MakeSpecialShortVerb}[1]{verbatim macro}
 % Uses the definition of \cs{MakeShortVerb} from \pkg{shortvrb} except with \cs{verb} replaced with the first argument.
 % The second argument is then read by \cs{@MakeShortVerb}.
 %    \begin{macrocode}
