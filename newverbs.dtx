@@ -51,7 +51,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{58}\relax
+% \CheckSum{65}\relax
 %
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -71,6 +71,7 @@
 %
 %
 % \changes{v1.0}{2010/04/05}{Initial version}
+% \changes{v1.1}{2010/04/13}{Added usage of 'csquotes' macros if loaded.}
 %
 % \DoNotIndex{\newcommand,\newenvironment,\providecommand}
 %
@@ -108,7 +109,9 @@
 % \DescribeMacro\qverb<char><verbatim material><char>
 % This macro adds quote characters around the verbatim material.
 % Two macros are used to insert the quotes: \cs{qverbbeginquote} (`) and \cs{qverbendquote} (').
-% They can be redefined by the user if required.
+% They can be redefined by the user if required. If the \pkg{csquotes} package was loaded beforehand
+% the above macros use its macros \cs{openinnerquote} and \cs{closeinnerquote} to take advantage of the language 
+% dependent quotation marks. See the manual of \pkg{csquotes} for more details.
 %
 % Using \Macro\qverb<char><verbatim material><char> is equal to \\
 % \Macro\qverbbeginquote\AlsoMacro\verb<char><verbatim material><char>\AlsoMacro\qverbendquote, or\\
@@ -211,9 +214,16 @@
 % \begin{macro}{\qverbbeginquote}
 % \begin{macro}{\qverbendquote}
 % This macros insert the actual quotes. They can be redefined by the user to contain the required quotes.
+% If available the quoting macros of \pkg{csquotes} are used.
+% \changes{v1.1}{2010/04/13}{Added usage of 'csquotes' macros if loaded.}
 %    \begin{macrocode}
-\def\qverbbeginquote{`}
-\def\qverbendquote{'}
+\@ifundefined{openinnerquote}{%
+  \def\qverbbeginquote{`}%
+  \def\qverbendquote{'}%
+}{%
+  \def\qverbbeginquote{\openinnerquote}%
+  \def\qverbendquote{\closeinnerquote}%
+}
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
