@@ -6,6 +6,6 @@ and after the verbatim text (e.g. quotes or \fbox{}).  When used together with
 the 'shortvrb' package it allows the definition of short verbatim characters
 which use this variants instead of the normal \verb.
 
-Copyright (c) 2010 by Martin Scharrer <martin@scharrer-online.de>
+Copyright (c) 2010-2011 by Martin Scharrer <martin@scharrer-online.de>
 WWW: http://latex.scharrer-online.de/
 
