@@ -27,7 +27,7 @@
 %</driver>
 %<package>\ProvidesPackage{newverbs}
 %<*package|driver>
-  [2010/04/13 v1.1 Define new 'verb' commands and short verb. characters]
+  [2011/02/16 v1.2 Define new 'verb' commands and short verb. characters]
 %</package|driver>
 %
 %<*driver>
@@ -51,7 +51,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{65}\relax
+% \CheckSum{131}\relax
 %
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -72,6 +72,7 @@
 %
 % \changes{v1.0}{2010/04/05}{Initial version}
 % \changes{v1.1}{2010/04/13}{Added usage of 'csquotes' macros if loaded.}
+% \changes{v1.2}{2011/02/16}{Added support for 'tabularx' environments.}
 %
 % \DoNotIndex{\newcommand,\newenvironment,\providecommand}
 %
@@ -154,6 +155,9 @@
 % and \cs{MakeShortVerb}. Any package which changes these might break this package.
 % Users which encounter incompatibilities should not hesitate to contact the package author (with details!).
 %
+% Since v1.2 from 2011/02/16 the new verbatim macros and their short versions can be used inside \env{tabularx} environments.
+% This package patches an internal macro of \pkg{tabularx} to achieve this compatibility.
+%
 % \StopEventually{}
 % \section{Implementation}
 % \iffalse
@@ -184,8 +188,45 @@
     \begingroup
     \newverbcommand@settings
     \def\verb@egroup{\verb@orig@egroup#4\endgroup}%
+    \def\newverbs@txend{#4\endgroup}
     #3\verb
   }%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\newverbs@tabularxsupport}
+% Enables support for the new verbatim macros inside \env{tabularx} environments.
+% This environment defines its own almost-verbatim form of |\verb|%^^A|
+% which lacks the end-macro we patch above. The following code inserts such 
+% an end-macro.
+%    \begin{macrocode}
+\def\newverbs@tabularxsupport{%
+    \begingroup
+    \def\orig@TX@vb##1{\def\@tempa####1##1{\toks@{####1}\edef\@tempa{\the\toks@}%
+        \expandafter\TX@v\meaning\@tempa\\ \\\ifnum0=`{\fi}}\@tempa!}
+    \ifx\TX@vb\orig@TX@vb
+        \endgroup
+        \PackageInfo{newverbs}{Patching 'TX@vb' macro of the 'tabularx' package.}%
+        \def\TX@vb##1{\def\@tempa####1##1{\toks@{####1}\edef\@tempa{\the\toks@}%
+            \expandafter\TX@v\meaning\@tempa\\ \\\ifnum0=`{\fi}\newverbs@txend}\@tempa!}
+    \else
+        \endgroup
+        \PackageWarning{newverbs}{Couldn't patch 'TX@vb' macro of the 'tabularx' package. Definition unknown.}%
+    \fi
+    \let\newverbs@tabularxsupport\relax
+}
+%    \end{macrocode}
+% The end-macro is initially empty and is set for every call of a new verb macro.
+%    \begin{macrocode}
+\def\newverbs@txend{}
+%    \end{macrocode}
+% The support is activated either now or at the begin of the document if the \pkg{tabularx} is loaded.
+%    \begin{macrocode}
+\@ifpackageloaded{tabularx}{%
+    \newverbs@tabularxsupport
+}{%
+    \AtBeginDocument{\@ifpackageloaded{tabularx}{\newverbs@tabularxsupport}{}}%
 }
 %    \end{macrocode}
 % \end{macro}
