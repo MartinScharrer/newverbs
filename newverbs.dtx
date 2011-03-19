@@ -32,14 +32,9 @@
 %
 %<*driver>
 \documentclass{ydoc}
-\usepackage{hyperref}
-\usepackage{xcolor}
-
 \GetFileInfo{newverbs.dtx}
 \usepackage{newverbs}[\filedate]
-\usepackage{shortvrb}
 
-\MakeSpecialShortVerb{\qverb}{\"}
 %\EnableCrossrefs
 %\CodelineIndex
 %\RecordChanges
@@ -73,6 +68,7 @@
 % \changes{v1.0}{2010/04/05}{Initial version}
 % \changes{v1.1}{2010/04/13}{Added usage of 'csquotes' macros if loaded.}
 % \changes{v1.2}{2011/02/16}{Added support for 'tabularx' environments.}
+% \changes{v1.2a}{2011/03/19}{Removed spurious spaces.}
 %
 % \DoNotIndex{\newcommand,\newenvironment,\providecommand}
 %
