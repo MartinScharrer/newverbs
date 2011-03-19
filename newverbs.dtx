@@ -188,7 +188,7 @@
     \begingroup
     \newverbcommand@settings
     \def\verb@egroup{\verb@orig@egroup#4\endgroup}%
-    \def\newverbs@txend{#4\endgroup}
+    \def\newverbs@txend{#4\endgroup}%
     #3\verb
   }%
 }
@@ -204,12 +204,12 @@
 \def\newverbs@tabularxsupport{%
     \begingroup
     \def\orig@TX@vb##1{\def\@tempa####1##1{\toks@{####1}\edef\@tempa{\the\toks@}%
-        \expandafter\TX@v\meaning\@tempa\\ \\\ifnum0=`{\fi}}\@tempa!}
+        \expandafter\TX@v\meaning\@tempa\\\\\ifnum0=`{\fi}}\@tempa!}%
     \ifx\TX@vb\orig@TX@vb
         \endgroup
         \PackageInfo{newverbs}{Patching 'TX@vb' macro of the 'tabularx' package.}%
         \def\TX@vb##1{\def\@tempa####1##1{\toks@{####1}\edef\@tempa{\the\toks@}%
-            \expandafter\TX@v\meaning\@tempa\\ \\\ifnum0=`{\fi}\newverbs@txend}\@tempa!}
+            \expandafter\TX@v\meaning\@tempa\\\\\ifnum0=`{\fi}\newverbs@txend}\@tempa!}%
     \else
         \endgroup
         \PackageWarning{newverbs}{Couldn't patch 'TX@vb' macro of the 'tabularx' package. Definition unknown.}%
