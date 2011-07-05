@@ -288,6 +288,47 @@
 %    \end{macrocode}
 % \end{macro}
 %
+%    \begin{macrocode}
+
+
+\newcommand*\collectverbtext{%
+    \begingroup
+    \verbatim@font
+    \@ifstar
+        \@scollectverb
+        \@collectverb
+}
+
+\def\@collectverbtext#1{%
+    \verb@eol@error
+    \let\do\@makeother
+    \dospecials
+    \@noligs
+    \@vobeyspaces
+    \frenchspacing
+    \@@collectverbtext{#1}%
+}
+
+\def\@scollectverbtext#1{%
+    \verb@eol@error
+    \let\do\@makeother
+    \dospecials
+    \@noligs
+    \@@collectverbtext{#1}%
+}
+
+
+\def\@@collectverbtext#1#2{%
+    \catcode`#2\active
+    \begingroup
+    \lccode`\~`#2%
+    \lowercase{\endgroup
+        \def\@@@collectverbtext##1~}{#1{##1}\endgroup}%
+    \@@@collectverbtext
+}
+
+%    \end{macrocode}
+%
 % \iffalse
 %</package>
 % \fi
