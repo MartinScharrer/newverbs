@@ -295,17 +295,17 @@
     \begingroup
     \verbatim@font
     \@ifstar
-        \@scollectverb
-        \@collectverb
+        \@scollectverbtext
+        \@collectverbtext
 }
 
 \def\@collectverbtext#1{%
     \verb@eol@error
     \let\do\@makeother
     \dospecials
-    \@noligs
     \@vobeyspaces
     \frenchspacing
+    \@noligs
     \@@collectverbtext{#1}%
 }
 
@@ -327,6 +327,46 @@
     \@@@collectverbtext
 }
 
+\newcommand*\collectverbarg{%
+    \begingroup
+    \@ifstar
+        \@scollectverbarg
+        \@collectverbarg
+}
+
+\def\@collectverbarg#1{%
+    \verb@eol@error
+    \let\do\@makeother
+    \dospecials
+    \obeyspaces
+    \@@collectverbarg{#1}%
+}
+
+\def\@scollectverbarg#1{%
+    \verb@eol@error
+    \let\do\@makeother
+    \dospecials
+    \@@collectverbarg{#1}%
+}
+
+\def\@@collectverbarg#1#2{%
+    \catcode`#2\active
+    \begingroup
+    \lccode`\~`#2%
+    \lowercase{\endgroup
+        \def\@@@collectverbarg##1~}{\endgroup#1{##1}}%
+    \@@@collectverbarg
+}
+
+\newcommand*\Verbdef{%
+    \@ifstar
+        {\@Verbdef*}%
+        {\@Verbdef{}}%
+}
+
+\newcommand*\@Verbdef[2]{%
+    \collectverbarg#1{\def#2}%
+}
 %    \end{macrocode}
 %
 % \iffalse
