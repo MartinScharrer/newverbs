@@ -27,7 +27,7 @@ MKDIR = mkdir -p
 
 .PHONY: all doc package clean fullclean tds reload
 
-all: package doc example
+all: doc
 new: fullclean all
 
 doc: ${PACKAGE}.pdf reload
