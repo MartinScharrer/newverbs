@@ -1,4 +1,4 @@
-# $Id$
+# $Id: Makefile 2527 2011-07-24 01:01:54Z martin $
 
 PACKAGE=newverbs
 PACKAGE_STY = ${PACKAGE}.sty
@@ -30,7 +30,8 @@ MKDIR = mkdir -p
 all: doc
 new: fullclean all
 
-doc: ${PACKAGE}.pdf reload
+doc:
+	latexmk -pdf ${PACKAGE}.dtx
 
 pdf: one_run reload
 	
@@ -57,8 +58,6 @@ one_run: ${PACKAGE}.dtx
 	-makeindex -s gglo.ist -o $*.gls $*.glo
 	${LATEX} $*.dtx
 	${LATEX} $*.dtx
-
-${PACKAGE}.pdf: ${PACKAGE}.sty
 
 ${INSGENERATED}: *.dtx ${PACKAGE}.ins 
 	yes | latex ${PACKAGE}.ins
