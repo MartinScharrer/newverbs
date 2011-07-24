@@ -131,84 +131,155 @@
 %    \end{macrocode}
 % \end{macro}
 %
+%
+% \subsection{Collect verbatim argument}
+%
+% \begin{macro}{\collectverb}
+% Collects verbatim text which can be typeset.
+% Checks for an existing star.
 %    \begin{macrocode}
-
-
-\newcommand*\collectverbtext{%
+\newcommand*\collectverb{%
     \begingroup
     \verbatim@font
     \@ifstar
-        \@scollectverbtext
-        \@collectverbtext
+        \@scollectverb
+        \@collectverb
 }
-
-\def\@collectverbtext#1{%
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\@collectverb}[1]{<code>}
+% Changes catcodes and ensures that spaces are displayed normally.
+%    \begin{macrocode}
+\def\@collectverb#1{%
     \verb@eol@error
     \let\do\@makeother
     \dospecials
     \@vobeyspaces
     \frenchspacing
     \@noligs
-    \@@collectverbtext{#1}%
+    \@@collectverb{#1}%
 }
-
-\def\@scollectverbtext#1{%
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\@scollectverb}[1]{<code>}
+% Changes catcodes.
+%    \begin{macrocode}
+\def\@scollectverb#1{%
     \verb@eol@error
     \let\do\@makeother
     \dospecials
     \@noligs
-    \@@collectverbtext{#1}%
+    \@@collectverb{#1}%
 }
-
-
-\def\@@collectverbtext#1#2{%
-    \catcode`#2\active
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\@@collectverb}[2]{<code>}{<char>}
+% Defines \Macro\@@@collectverb to read everything to the next occurrence of \meta{char}
+% and feed it to the given \meta{code}.
+%    \begin{macrocode}
+\def\@@collectverb#1#2{%
+    \ifnum`#2=`\{%
+        \catcode`\}\active
+    \else
+        \catcode`#2\active
+    \fi
     \begingroup
-    \lccode`\~`#2%
+    \ifnum`#2=`\{%
+        \lccode`\~`\}%
+    \else
+        \lccode`\~`#2%
+    \fi
     \lowercase{\endgroup
-        \def\@@@collectverbtext##1~}{#1{##1}\endgroup}%
-    \@@@collectverbtext
+        \def\@@@collectverb##1~}{#1{##1}\endgroup}%
+    \@@@collectverb
 }
-
-\newcommand*\collectverbarg{%
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\Collectverb}
+% Collects argument as plain verbatim and feeds it to the given code.
+% The text is suitable to be printed to auxiliary files.
+%    \begin{macrocode}
+\newcommand*\Collectverb{%
     \begingroup
     \@ifstar
-        \@scollectverbarg
-        \@collectverbarg
+        \@sCollectverb
+        \@Collectverb
 }
-
-\def\@collectverbarg#1{%
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\@Collectverb}
+%    \begin{macrocode}
+\def\@Collectverb#1{%
     \verb@eol@error
     \let\do\@makeother
     \dospecials
     \obeyspaces
-    \@@collectverbarg{#1}%
+    \@@Collectverb{#1}%
 }
-
-\def\@scollectverbarg#1{%
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\@sCollectverb}
+%    \begin{macrocode}
+\def\@sCollectverb#1{%
     \verb@eol@error
     \let\do\@makeother
     \dospecials
-    \@@collectverbarg{#1}%
+    \@@Collectverb{#1}%
 }
-
-\def\@@collectverbarg#1#2{%
-    \catcode`#2\active
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\@@Collectverb}
+%    \begin{macrocode}
+\def\@@Collectverb#1#2{%
+    \ifnum`#2=`\{%
+        \catcode`\}\active
+    \else
+        \catcode`#2\active
+    \fi
     \begingroup
-    \lccode`\~`#2%
+    \ifnum`#2=`\{%
+        \lccode`\~`\}%
+    \else
+        \lccode`\~`#2%
+    \fi
     \lowercase{\endgroup
-        \def\@@@collectverbarg##1~}{\endgroup#1{##1}}%
-    \@@@collectverbarg
+        \def\@@@Collectverb##1~}{\endgroup#1{##1}}%
+    \@@@Collectverb
 }
-
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\Verbdef}
+%    \begin{macrocode}
 \newcommand*\Verbdef{%
     \@ifstar
         {\@Verbdef*}%
         {\@Verbdef{}}%
 }
-
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\@Verbdef}
+%    \begin{macrocode}
 \newcommand*\@Verbdef[2]{%
-    \collectverbarg#1{\def#2}%
+    \Collectverb#1{\def#2}%
 }
 %    \end{macrocode}
+% \end{macro}
 %
