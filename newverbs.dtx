@@ -20,7 +20,7 @@
 %</copyright>
 %<*!copyright>
 %
-%% $Id$
+%% $Id: newverbs.dtx 2524 2011-07-23 22:13:02Z martin $
 %
 %<*driver>
 \ProvidesFile{newverbs.dtx}
@@ -126,6 +126,7 @@
 %
 % \subsection{Using \cs{verb} variants with short verbatim character}
 %
+% \DescribeMacro\MakeSpecialShortVerb {<\textbackslash macro>}{\textbackslash\meta{char}}
 % \DescribeMacro\MakeSpecialShortVerb*{<\textbackslash macro>}{\textbackslash\meta{char}}
 % This package also defines a special version of the \cs{MakeShortVerb} macro from the \pkg{shortvrb} package.
 % The orignal command \Macro\MakeShortVerb*{\textbackslash\meta{char}} changes the meaning of \meta{char} so that 
@@ -144,6 +145,42 @@
 % \bigskip\noindent\textbf{Examples:}\\
 % |\MakeSpecialShortVerb{\qverb}{\"}| will make `|"|' a short, quoting verbatim character: |"$^&$"| $\to$ "$^&$".\\
 % |\DeleteShortVerb{\"}\MakeSpecialShortVerb{\fverb}{\"}| will change it definition to use \cs{fverb}: \fverb+$^&$+.
+%
+%
+% \DescribeMacro\collectverb{<code>}<char><verbatim material><char>
+% \DescribeMacro\collectverb*{<code>}<char><verbatim material><char>
+% \DescribeMacro\collectverb{<code>}{<verbatim material>}
+% \DescribeMacro\collectverb*{<code>}{<verbatim material>}
+% This macro is supposed to be used with its \marg{code} argument at the end of user or package macro which want to typeset verbatim material.
+% It will collect everything between the following \meta{char} and its next occurrence as verbatim material.
+% An exception is if the following \meta{char} is `|{|', then `|}|' is taken as the end \meta{char} to simulate a normal argument to increase user friendliness.
+% Afterwards \meta{code} is expanded with \marg{verbatim material} direct behind it. The macro ensures proper font settings to typeset the verbatim material.
+% For this, a group is opened before the material is collected and closed directly after the given code is processed. ^^A \MacroArgs<code>{<verbatim material>}\AlsoMacro\endgroup.
+% Therefore all changes done by the \meta{code} are local and the material should be typeset directly.
+% (In special cases when the group is disruptive, \meta{code} can be a macro which reads both the verbatim material and the \Macro\endgroup as two arguments.
+% However, then special care must be taken to use the correct font and some of the special characters may be active but have lost their definition.)
+% The starred version will make spaces appear as `\collectverb*{}: :' instead of displaying them as normal spaces.
+%
+%
+% \DescribeMacro\Collectverb{<code>}<char><verbatim material><char>
+% \DescribeMacro\Collectverb*{<code>}<char><verbatim material><char>
+% \DescribeMacro\Collectverb{<code>}{<verbatim material>}
+% \DescribeMacro\Collectverb*{<code>}{<verbatim material>}
+% This macro is supposed to be used with its \marg{code} argument at the end of user or package macro which want to collect plain verbatim material suitable to be 
+% written in auxiliary files or log messages.
+% It will collect everything between the following \meta{char} and its next occurrence as verbatim material without adjusting the font or defining any characters in a special way (besides being verbatim).
+% The starred version will make spaces appear as `\Collectverb*{}: :' when typeset but still be written to auxiliary files as normal spaces.
+% An exception is if the following \meta{char} is `|{|', then `|}|' is taken as the end \meta{char} to simulate a normal argument to increase user friendliness.
+% Afterwards \meta{code} is expanded with \marg{verbatim material} direct behind it. This macro does not add any group around the code.
+% Should the code be typeset after all a proper font (e.g.\ \Macro\ttfamily or \Macro\verbatim@font) must be enabled manually.
+%
+% \DescribeMacro\Verbdef<\textbackslash macro><char><verbatim material><char>
+% \DescribeMacro\Verbdef*<\textbackslash macro><char><verbatim material><char>
+% \DescribeMacro\Verbdef<\textbackslash macro>{<verbatim material>}
+% \DescribeMacro\Verbdef*<\textbackslash macro>{<verbatim material>}
+% This macro uses \Macro\Collectverb internally to define \meta{\textbackslash macro} as the plain \meta{verbatim material}.
+% This can be used to define macros for special characters, so these can be used in error or warning messages or be written into auxiliary files.
+% A corresponding \Macro\verbdef macro which defines macros with typesetable verbatim material is already provided by the \pkg{verbdef} package.
 %
 %
 % \section{Compatibility with other verbatim packages}
