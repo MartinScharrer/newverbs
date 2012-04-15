@@ -264,6 +264,88 @@
 % \end{macro}
 %
 %
+% \begin{macro}{\Collectverbenv}
+% Collects environment content as plain verbatim and feeds it to the given code.
+% The text is suitable to be printed to auxiliary files.
+%    \begin{macrocode}
+\newcommand*\Collectverbenv{%
+    \begingroup
+    \@ifstar
+        \@sCollectverbenv
+        \@Collectverbenv
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\@Collectverbenv}
+%    \begin{macrocode}
+\def\@Collectverbenv#1{%
+    \newverb@catcodes
+    \obeyspaces
+    \expandafter\@@Collectverbenv\expandafter{\@currenvir}{#1}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\newverb@catcodes}
+%    \begin{macrocode}
+\begingroup
+\catcode`\^^I=\active
+\gdef\newverb@catcodes{%
+    \let\do\@makeother
+    \dospecials
+    \obeylines
+    \endlinechar=13
+    \catcode`\^^I=\active
+    \def^^I{\newverb@tab}%
+}
+\gdef^^I{\newverb@tab}%
+\endgroup
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\newverb@tab}
+%    \begin{macrocode}
+\edef\newverb@tab{\space\space\space\space}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\@sCollectverbenv}
+%    \begin{macrocode}
+\def\@sCollectverbenv#1{%
+    \newverb@catcodes
+    \expandafter\@@Collectverbenv\expandafter{\@currenvir}{#1}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\@@Collectverbenv}
+%    \begin{macrocode}
+\begingroup
+\catcode`\|=0
+\catcode`\(=1
+\catcode`\)=2
+\@makeother\{
+\@makeother\}
+\@makeother\\
+|catcode`|^^M=|active%
+|gdef|@@Collectverbenv#1#2(%
+    |long|def|@@@Collectverb##1^^M##2^^M\end{#1}(|endgroup#2(##2)|end(#1))%
+    |@@@Collectverb%
+)%
+|gdef|misj(|def^^M(^^J))%
+%|gdef|misj(|def^^M##1(|ifx##1|endmarker|else|noexpand^^M|expandafter##1|fi))%
+|endgroup%
+%    \end{macrocode}
+% \end{macro}
+%
+%
+%
 % \begin{macro}{\Verbdef}
 %    \begin{macrocode}
 \newcommand*\Verbdef{%
