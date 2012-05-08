@@ -1,5 +1,5 @@
 %    \begin{macrocode}
-\ProvidesPackage{newverbs}[2011/07/24 v1.3 Define new 'verb' commands and short verb. characters]
+\ProvidesPackage{newverbs}[2012/05/08 v1.3a Define new 'verb' commands and short verb. characters]
 %    \end{macrocode}
 %
 % \subsection{Verb Definition Commands}
@@ -41,16 +41,21 @@
 %    \begin{macrocode}
 \def\newverbs@tabularxsupport{%
     \begingroup
-    \def\orig@TX@vb##1{\def\@tempa####1##1{\toks@{####1}\edef\@tempa{\the\toks@}%
+    \def\origa@TX@vb##1{\def\@tempa####1##1{\toks@{####1}\edef\@tempa{\the\toks@}%
+        \expandafter\TX@v\meaning\@tempa\\ \\\ifnum0=`{\fi}}\@tempa!}
+    \def\origb@TX@vb##1{\def\@tempa####1##1{\toks@{####1}\edef\@tempa{\the\toks@}%
         \expandafter\TX@v\meaning\@tempa\\\\\ifnum0=`{\fi}}\@tempa!}%
-    \ifx\TX@vb\orig@TX@vb
+    \ifcase0%
+        \ifx\TX@vb\origa@TX@vb 1\else
+        \ifx\TX@vb\origb@TX@vb 1\fi\fi
+    \relax
+        \endgroup
+        \PackageWarning{newverbs}{Couldn't patch 'TX@vb' macro of the 'tabularx' package. Definition unknown.}%
+    \else
         \endgroup
         \PackageInfo{newverbs}{Patching 'TX@vb' macro of the 'tabularx' package.}%
         \def\TX@vb##1{\def\@tempa####1##1{\toks@{####1}\edef\@tempa{\the\toks@}%
             \expandafter\TX@v\meaning\@tempa\\\\\ifnum0=`{\fi}\newverbs@txend}\@tempa!}%
-    \else
-        \endgroup
-        \PackageWarning{newverbs}{Couldn't patch 'TX@vb' macro of the 'tabularx' package. Definition unknown.}%
     \fi
     \let\newverbs@tabularxsupport\relax
 }
