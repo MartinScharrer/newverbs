@@ -1,126 +1,190 @@
-# $Id: Makefile 2527 2011-07-24 01:01:54Z martin $
+CONTRIBUTION  = newverbs
+NAME          = Martin Scharrer
+EMAIL         = martin@scharrer-online.de
+DIRECTORY     = /macros/latex/contrib/${CONTRIBUTION}
+LICENSE       = free
+FREEVERSION   = lppl
+CTAN_FILE     = ${CONTRIBUTION}.zip
+export CONTRIBUTION VERSION NAME EMAIL SUMMARY DIRECTORY DONOTANNOUNCE ANNOUNCE NOTES LICENSE FREEVERSION CTAN_FILE
 
-PACKAGE=newverbs
-PACKAGE_STY = ${PACKAGE}.sty
-PACKAGE_DOC = ${PACKAGE}.pdf
-PACKAGE_SRC = ${PACKAGE}.dtx ${PACKAGE}.ins Makefile
-PACKFILES = ${PACKAGE_SRC} ${PACKAGE_DOC} README
-TEXAUX = *.aux *.log *.glo *.ind *.idx *.out *.svn *.svx *.svt *.toc *.ilg *.gls *.hd *.exa *.exb *.thm *.fdb_latexmk
-TESTDIR = tests
-INSGENERATED = ${PACKAGE_STY}
-ZIPFILE = ${PACKAGE}-${ZIPVERSION}.zip
-TDSZIPFILE = ${PACKAGE}-${ZIPVERSION}.tds.zip
-GENERATED = ${INSGENERATED} ${PACKAGE}.pdf
-ZIPS = zip tdszip
 
-LATEX_OPTIONS = -interaction=batchmode
-LATEX = pdflatex ${LATEX_OPTIONS}
+MAINDTXS      = ${CONTRIBUTION}.dtx
+DTXFILES      = ${MAINDTXS}
+INSFILES      = ${CONTRIBUTION}.ins
+LTXFILES      = ${CONTRIBUTION}.sty
+MAINPDFS      = ${CONTRIBUTION}.pdf
+LTXDOCFILES   = ${MAINPDFS} README
+LTXSRCFILES   = ${DTXFILES} ${INSFILES}
+PLAINFILES    = #${CONTRIBUTION}.tex
+PLAINDOCFILES = #${CONTRIBUTION}.?
+PLAINSRCFILES = #${CONTRIBUTION}.?
+GENERICFILES  = #${CONTRIBUTION}.tex
+GENDOCFILES   = #${CONTRIBUTION}.?
+GENSRCFILES   = #${CONTRIBUTION}.?
+SCRIPTFILES   = #${CONTRIBTUION}.pl
+SCRDOCFILES   = #${CONTRIBUTION}.?
+ALLFILES      = ${DTXFILES} ${INSFILES} ${LTXFILES} ${LTXDOCFILES} ${LTXSRCFILES} \
+				${PLAINFILES} ${PLAINDOCFILES} ${PLAINSRCFILES} \
+				${GENERICFILES} ${GENDOCFILES} ${GENSRCFILES} \
+				${SCRIPTFILES} ${SCRDOCFILES}
+MAINFILES     = ${DTXFILES} ${INSFILES} ${LTXFILES}
+CTANFILES     = ${DTXFILES} ${INSFILES} ${LTXDOCFILES} ${PLAINDOCFILES} ${GENDOCFILES} ${SCRDOCFILES}
 
-SHELL=/bin/bash
+TDSZIP      = ${CONTRIBUTION}.tds.zip
 
-TEXMFDIR = ${HOME}/texmf
+TEXMF       = ${HOME}/texmf
+LTXDIR      = ${TEXMF}/tex/latex/${CONTRIBUTION}/
+LTXDOCDIR   = ${TEXMF}/doc/latex/${CONTRIBUTION}/
+LTXSRCDIR   = ${TEXMF}/source/latex/${CONTRIBUTION}/
+GENERICDIR  = ${TEXMF}/tex/generic/${CONTRIBUTION}/
+GENDOCDIR   = ${TEXMF}/doc/generic/${CONTRIBUTION}/
+GENSRCDIR   = ${TEXMF}/source/generic/${CONTRIBUTION}/
+PLAINDIR    = ${TEXMF}/tex/plain/${CONTRIBUTION}/
+PLAINDOCDIR = ${TEXMF}/doc/plain/${CONTRIBUTION}/
+PLAINSRCDIR = ${TEXMF}/source/plain/${CONTRIBUTION}/
+SCRIPTDIR   = ${TEXMF}/scripts/${CONTRIBUTION}/
+SCRDOCDIR   = ${TEXMF}/doc/support/${CONTRIBUTION}/
 
-CP = cp -v
-MV = mv -v
-RMDIR = rm -rf
-MKDIR = mkdir -p
+TDSDIR   = tds
+TDSFILES = ${LTXFILES} ${LTXDOCFILES} ${LTXSRCFILES} \
+		   ${PLAINFILES} ${PLAINDOCFILES} ${PLAINSRCFILES} \
+		   ${GENERICFILES} ${GENDOCFILES} ${GENSRCFILES} \
+		   ${SCRIPTFILES} ${SCRDOCFILES}
 
-.PHONY: all doc package clean fullclean tds reload
+BUILDDIR = build
+
+LATEXMK  = latexmk -pdf -quiet
+ZIP      = zip -r
+WEBBROWSER = firefox
+GETVERSION = $(strip $(shell grep '=\*VERSION' -A1 ${MAINDTXS} | tail -n1))
+
+AUXEXTS  = .aux .bbl .blg .cod .exa .fdb_latexmk .glo .gls .lof .log .lot .out .pdf .que .run.xml .sta .stp .svn .svt .toc
+CLEANFILES = $(addprefix ${CONTRIBUTION}, ${AUXEXTS})
+
+.PHONY: all doc clean distclean
 
 all: doc
-new: fullclean all
 
-doc:
-	latexmk -pdf ${PACKAGE}.dtx
+doc: ${MAINPDFS}
 
-pdf: one_run reload
-	
+${MAINPDFS}: ${DTXFILES} README ${INSFILES} ${LTXFILES}
+	${MAKE} --no-print-directory build
+	cp "${BUILDDIR}/$@" "$@"
 
-package: ${PACKAGE}.sty
+ifneq (${BUILDDIR},build)
+build: ${BUILDDIR}
+endif
 
-reload:
-	-@pdfreload --file ${PACKAGE}.pdf 2>/dev/null || pdfopen --file ${PACKAGE}.pdf
+${BUILDDIR}: ${MAINFILES}
+	-mkdir ${BUILDDIR} 2>/dev/null || true
+	cp ${INSFILES} README ${BUILDDIR}/
+	$(foreach DTX,${MAINDTXS}, tex '\input ydocincl\relax\includefiles{${DTX}}{${BUILDDIR}/${DTX}}' && rm -f ydocincl.log;)
+	cd ${BUILDDIR}; $(foreach INS, ${INSFILES}, tex ${INS};)
+	cd ${BUILDDIR}; $(foreach DTX, ${MAINDTXS}, ${LATEXMK} ${DTX};)
+	touch ${BUILDDIR}
 
-example:
-
-pdfopt:
-	pdfopt ${PACKAGE}.pdf opt_${PACKAGE}.pdf && mv opt_${PACKAGE}.pdf ${PACKAGE}.pdf
-
-ctanify: ${PACKFILES} | pdfopt
-	ctanify $^
-
-one_run: ${PACKAGE}.dtx
-	${LATEX} $<
-
-%.pdf: %.dtx
-	${LATEX} $*.dtx
-	-makeindex -s gind.ist -o $*.ind $*.idx
-	-makeindex -s gglo.ist -o $*.gls $*.glo
-	${LATEX} $*.dtx
-	${LATEX} $*.dtx
-
-${INSGENERATED}: *.dtx ${PACKAGE}.ins 
-	yes | latex ${PACKAGE}.ins
+$(addprefix ${BUILDDIR}/,$(sort ${TDSFILES} ${CTANFILES})): ${MAINFILES}
+	${MAKE} --no-print-directory build
 
 clean:
-	rm -f ${TEXAUX} $(addprefix ${TESTDIR}/, ${TEXAUX})
+	latexmk -C ${CONTRIBUTION}.dtx
+	${RM} ${CLEANFILES}
+	${RM} -r ${BUILDDIR} ${TDSDIR} ${TDSZIP} ${CTAN_FILE}
 
-fullclean:
-	rm -f ${TEXAUX} $(addprefix ${TESTDIR}/, ${TEXAUX}) ${GENERATED} *~ *.backup
-	rm -f ${PACKAGE}*.zip
-	rm -rf tds/ .tds
 
-${PACKAGE}.zip: zip
+distclean:
+	latexmk -c ${CONTRIBUTION}.dtx
+	${RM} ${CLEANFILES}
+	${RM} -r ${BUILDDIR} ${TDSDIR}
 
-zip: ${PACKAGE}.pdf
+CPORLN=cp
 
-zip: ZIPVERSION=$(shell grep "Package: ${PACKAGE} " ${PACKAGE}.log | \
-	sed -e "s/.*Package: ${PACKAGE} ....\/..\/..\s\+\(v\S\+\).*/\1/")
+install: uninstall $(addprefix ${BUILDDIR}/,${TDSFILES})
+ifneq ($(strip $(LTXFILES)),)
+	test -d "${LTXDIR}" || mkdir -p "${LTXDIR}"
+	${CPORLN} $(addprefix ${BUILDDIR}/,${LTXFILES}) "$(abspath ${LTXDIR})"
+endif
+ifneq ($(strip $(LTXSRCFILES)),)
+	test -d "${LTXSRCDIR}" || mkdir -p "${LTXSRCDIR}"
+	${CPORLN} $(addprefix ${BUILDDIR}/, ${LTXSRCFILES}) "$(abspath ${LTXSRCDIR})"
+endif
+ifneq ($(strip $(LTXDOCFILES)),)
+	test -d "${LTXDOCDIR}" || mkdir -p "${LTXDOCDIR}"
+	${CPORLN} $(addprefix ${BUILDDIR}/, ${LTXDOCFILES}) "$(abspath ${LTXDOCDIR})"
+endif
+ifneq ($(strip $(GENERICFILES)),)
+	test -d "${GENERICDIR}" || mkdir -p "${GENERICDIR}"
+	${CPORLN} $(addprefix ${BUILDDIR}/, ${GENERICFILES}) "$(abspath ${GENERICDIR})"
+endif
+ifneq ($(strip $(GENSRCFILES)),)
+	test -d "${GENSRCDIR}" || mkdir -p "${GENSRCDIR}"
+	${CPORLN} $(addprefix ${BUILDDIR}/, ${GENSRCFILES}) "$(abspath ${GENSRCDIR})"
+endif
+ifneq ($(strip $(GENDOCFILES)),)
+	test -d "${GENDOCDIR}" || mkdir -p "${GENDOCDIR}"
+	${CPORLN} $(addprefix ${BUILDDIR}/, ${GENDOCFILES}) "$(abspath ${GENDOCDIR})"
+endif
+ifneq ($(strip $(PLAINFILES)),)
+	test -d "${PLAINDIR}" || mkdir -p "${PLAINDIR}"
+	${CPORLN} $(addprefix ${BUILDDIR}/, ${PLAINFILES}) "$(abspath ${PLAINDIR})"
+endif
+ifneq ($(strip $(PLAINSRCFILES)),)
+	test -d "${PLAINSRCDIR}" || mkdir -p "${PLAINSRCDIR}"
+	${CPORLN} $(addprefix ${BUILDDIR}/, ${PLAINSRCFILES}) "$(abspath ${PLAINSRCDIR})"
+endif
+ifneq ($(strip $(PLAINDOCFILES)),)
+	test -d "${PLAINDOCDIR}" || mkdir -p "${PLAINDOCDIR}"
+	${CPORLN} $(addprefix ${BUILDDIR}/, ${PLAINDOCFILES}) "$(abspath ${PLAINDOCDIR})"
+endif
+ifneq ($(strip $(SCRIPTFILES)),)
+	test -d "${SCRIPTDIR}" || mkdir -p "${SCRIPTDIR}"
+	${CPORLN} $(addprefix ${BUILDDIR}/, ${SCRIPTFILES}) "$(abspath ${SCRIPTDIR})"
+endif
+ifneq ($(strip $(SCRDOCFILES)),)
+	test -d "${SCRDOCDIR}" || mkdir -p "${SCRDOCDIR}"
+	${CPORLN} $(addprefix ${BUILDDIR}/, ${SCRDOCFILES}) "$(abspath ${SCRDOCDIR})"
+endif
+	touch ${TEXMF}
+	-test -f ${TEXMF}/ls-R && texhash ${TEXMF} || true
 
-zip:
-	@${MAKE} --no-print-directory ${ZIPFILE}
 
-${PACKAGE}%.zip: ${PACKFILES}
-	@test -n "${IGNORE_CHECKSUM}" || grep -q '^\\OnlyDescription' ${PACKAGE}.dtx || grep -q '\* Checksum passed \*' ${PACKAGE}.log
-	-pdfopt ${PACKAGE}.pdf opt_${PACKAGE}.pdf && mv opt_${PACKAGE}.pdf ${PACKAGE}.pdf
-	${RM} $@
-	zip $@ ${PACKFILES}
-	@echo
-	@echo "ZIP file $@ created!"
-
-tds: .tds
-	
-
-.tds: ${PACKAGE_STY} ${PACKAGE_DOC} ${PACKAGE_SRC}
-	@test -n "${IGNORE_CHECKSUM}" || grep -q '^\\OnlyDescription' ${PACKAGE}.dtx || grep -q '\* Checksum passed \*' ${PACKAGE}.log
-	${RMDIR} tds
-	${MKDIR} tds/
-	${MKDIR} tds/tex/ tds/tex/latex/ tds/tex/latex/${PACKAGE}/
-	${MKDIR} tds/doc/ tds/doc/latex/ tds/doc/latex/${PACKAGE}/
-	${MKDIR} tds/source/ tds/source/latex/ tds/source/latex/${PACKAGE}/
-	${CP} ${PACKAGE_STY} tds/tex/latex/${PACKAGE}/
-	${CP} ${PACKAGE_DOC} tds/doc/latex/${PACKAGE}/
-	${CP} ${PACKAGE_SRC} tds/source/latex/${PACKAGE}/
-	@touch $@
-
-tdszip: ${TDSZIPFILE}
-
-tdszip: ZIPVERSION=$(shell grep "Package: ${PACKAGE} " ${PACKAGE}.log | \
-	sed -e "s/.*Package: ${PACKAGE} ....\/..\/..\s\+\(v\S\+\).*/\1/")
-
-${TDSZIPFILE}: .tds
-	${RM} ${TDSZIPFILE}
-	cd tds && zip -r ../${TDSZIPFILE} .
-
-install: .tds
-	test -d "${TEXMFDIR}" && ${CP} -a tds/* "${TEXMFDIR}/" && texhash ${TEXMFDIR}
-
-sinstall:
-	@touch ${PACKAGE}.pdf
-	${MAKE} install
+installsymlinks: CPORLN=ln -sf
+installsymlinks: BUILDDIR=${PWD}
+installsymlinks: install
 
 uninstall:
-	test -d "${TEXMFDIR}" && ${RM} -rv "${TEXMFDIR}/tex/latex/${PACKAGE}" \
-	"${TEXMFDIR}/doc/latex/${PACKAGE}" "${TEXMFDIR}/source/latex/${PACKAGE}" && texhash ${TEXMFDIR}
+	${RM} -rf ${LTXDIR} ${LTXDOCDIR} ${LTXSRCDIR} \
+		${GENERICDIR} ${GENDOCDIR} ${GENSRCDIR} \
+		${PLAINDIR} ${PLAINDOCDIR} ${PLAINSRCDIR} \
+		${SCRIPTDIR} ${SCRDOCDIR}
+	-test -f ${TEXMF}/ls-R && texhash ${TEXMF} || true
+
+
+ifneq (${TDSDIR},tdsdir)
+tdsdir: ${TDSDIR}
+endif
+${TDSDIR}: $(addprefix ${BUILDDIR}/,${TDSFILES})
+	${MAKE} --no-print-directory install TEXMF=${TDSDIR}
+
+tdszip: ${TDSZIP}
+
+${TDSZIP}: ${TDSDIR}
+	-${RM} $@
+	cd ${TDSDIR} && ${ZIP} $(abspath $@) *
+
+zip: ${CTAN_FILE}
+
+${CTAN_FILE}: $(addprefix ${BUILDDIR}/,${CTANFILES}) ${TDSZIP}
+	-${RM} $@
+	${ZIP} -j $@ $^
+
+upload: VERSION = ${GETVERSION}
+
+upload: ${CTAN_FILE}
+	ctanupload -p
+
+webupload: VERSION = ${GETVERSION}
+webupload: ${CTAN_FILE}
+	${WEBBROWSER} 'http://dante.ctan.org/upload.html?contribution=${CONTRIBUTION}&version=${VERSION}&name=${NAME}&email=${EMAIL}&summary=${SUMMARY}&directory=${DIRECTORY}&DoNotAnnounce=${DONOTANNOUNCE}&announce=${ANNOUNCEMENT}&notes=${NOTES}&license=${LICENSE}&freeversion=${FREEVERSION}' &
 
 

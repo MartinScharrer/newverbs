@@ -1,13 +1,12 @@
-% \iffalse
-%<*copyright>
-%% Copyright (c) 2010-2011 by Martin Scharrer <martin@scharrer-online.de>
-%% WWW: http://latex.scharrer-online.de/
-%%
+% \iffalse meta-comment
+%<=*COPYRIGHT>
+%% Copyright (C) 2012 by Martin Scharrer <martin@scharrer-online.de>
+%% --------------------------------------------------------------------
 %% This work may be distributed and/or modified under the
 %% conditions of the LaTeX Project Public License, either version 1.3
 %% of this license or (at your option) any later version.
 %% The latest version of this license is in
-%%  http://www.latex-project.org/lppl.txt
+%%   http://www.latex-project.org/lppl.txt
 %% and version 1.3 or later is part of all distributions of LaTeX
 %% version 2005/12/01 or later.
 %%
@@ -17,13 +16,19 @@
 %%
 %% This work consists of the files newverbs.dtx and newverbs.ins
 %% and the derived file newverbs.sty.
-%</copyright>
-%<*!copyright>
+%<=/COPYRIGHT>
+% \fi
 %
-%% $Id: newverbs.dtx 2536 2011-07-26 22:45:59Z martin $
-%
+% \iffalse
 %<*driver>
-\ProvidesFile{newverbs.dtx}
+\ProvidesFile{newverbs.dtx}[%
+%<=*DATE>
+    2012/05/08
+%<=/DATE>
+%<=*VERSION>
+    v1.3a
+%<=/VERSION>
+    newverbs DTX file]
 \documentclass{ydoc}
 \GetFileInfo{newverbs.dtx}
 \usepackage{newverbs}[\filedate]
@@ -33,14 +38,13 @@
 %\RecordChanges
 \begin{document}
   \DocInput{newverbs.dtx}
-  \DocInput{newverbs.sty}
   %\PrintChanges
   %\PrintIndex
 \end{document}
 %</driver>
 % \fi
 %
-% \CheckSum{0}\relax
+% \CheckSum{0}
 %
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -187,12 +191,10 @@
 %
 % \StopEventually{}
 % \section{Implementation}
-% \iffalse
-%<*package>
-% \fi
 %
 % \iffalse
-%</package>
+%<@newverbs.sty>
 % \fi
+%
 % \Finale
 \endinput
