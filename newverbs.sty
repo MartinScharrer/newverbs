@@ -109,11 +109,11 @@
 % \changes{v1.1}{2010/04/13}{Added usage of 'csquotes' macros if loaded.}
 %    \begin{macrocode}
 \@ifundefined{openinnerquote}{%
-  \def\qverbbeginquote{`}%
-  \def\qverbendquote{'}%
+  \def\qverbbeginquote{``}%
+  \def\qverbendquote{''}%
 }{%
-  \def\qverbbeginquote{\openinnerquote}%
-  \def\qverbendquote{\closeinnerquote}%
+  \def\qverbbeginquote{\openautoquote}%
+  \def\qverbendquote{\closeautoquote}%
 }
 %    \end{macrocode}
 % \end{macro}
