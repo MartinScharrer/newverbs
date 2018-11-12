@@ -136,6 +136,7 @@
 % The second argument is then read by \cs{@MakeShortVerb}.
 %    \begin{macrocode}
 \newcommand*\MakeSpecialShortVerb[1]{%
+  \providecommand{#1}{\verb}%
   \@ifstar
     {\def\@shortvrbdef{#1*}\@MakeShortVerb}%
     {\def\@shortvrbdef{#1}\@MakeShortVerb}%
