@@ -136,21 +136,30 @@
 \RequirePackage{shortvrb}
 %    \end{macrocode}
 %
-% \begin{macro}{\MakeSpecialShortVerb}[1]{verbatim macro}
+% \begin{macro}{\@MakeSpecialShortVerb}[2]{star or empty}{verbatim macro}
 % Uses the definition of \cs{MakeShortVerb} from \pkg{shortvrb} except with \cs{verb} replaced with the first argument.
-% The second argument is then read by \cs{@MakeShortVerb}.
+% The last argument is then read by \cs{@MakeShortVerb}.
 %    \begin{macrocode}
-\newcommand*\MakeSpecialShortVerb[1]{%
-  \providecommand{#1}{\verb}%
-  \@ifstar
-    {\def\@shortvrbdef{#1*}\@MakeShortVerb}%
-    {\def\@shortvrbdef{#1}\@MakeShortVerb}%
+\def\@MakeSpecialShortVerb#1#2{%
+  \providecommand{#2}{\verb}%
+  \def\@shortvrbdef{#2#1}\@MakeShortVerb
 }
 %    \end{macrocode}
 % \end{macro}
 %
+% \begin{macro}{\MakeSpecialShortVerb}
+% Checks for the starred version and calls \cs{@MakeSpecialShortVerb} appropriately. The star needs to be added again
+% as \cs{@ifstar} removes it.
+%    \begin{macrocode}
+\newcommand*\MakeSpecialShortVerb{%
+  \@ifstar
+    {\@MakeSpecialShortVerb{*}}%
+    {\@MakeSpecialShortVerb{}}%
+}
+%    \end{macrocode}
+% \end{macro}
 %
-% \subsection{Collect verbatim argument}
+%% \subsection{Collect verbatim argument}
 %
 % \begin{macro}{\collectverb}
 % Collects verbatim text which can be typeset.
