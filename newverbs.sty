@@ -473,8 +473,37 @@
 %
 % \begin{macro}{\@Verbdef}[2]{<star or empty>}{<macro to be defined>}
 %    \begin{macrocode}
-\newcommand*\@Verbdef[2]{%
+\def\@Verbdef#1#2{%
     \Collectverb#1{\def#2}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\verbdef}
+% Provides an own definition of \Macro\verbdef which is also defined by the \pkg{verbdef} package.
+%    \begin{macrocode}
+\providecommand*\verbdef{%
+    \@ifstar
+        {\newverbs@verbdef*}%
+        {\newverbs@verbdef{}}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\@Verbdef}[2]{<star or empty>}{<macro to be defined>}
+%    \begin{macrocode}
+\def\newverbs@verbdef#1#2{%
+    \Collectverb#1{\newverbs@@verbdef{#2}}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\@Verbdef}[2]{<star or empty>}{<macro to be defined>}
+%    \begin{macrocode}
+\def\newverbs@@verbdef#1#2{%
+    \DeclareRobustCommand{#1}{{\newverbsfont#2}}%
 }
 %    \end{macrocode}
 % \end{macro}
