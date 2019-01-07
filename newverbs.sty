@@ -450,34 +450,6 @@
 % \end{macro}
 %
 %
-% \begin{macro}{\newverbenvironment}[2]{<environment name>}{<everything till the opening brace>}
-% The trailing |#| is a special \TeX{} syntax to catch everything till the opening brace.
-% See "The \TeX Book", page 204 for further explanation.
-% The \cmd{newcommand} is used empty beforehand for the does-already-exist test.
-%    \begin{macrocode}
-\newcommand\newverbenvironment{}
-\long\def\newverbenvironment#1#2#{%
-    \@newverbenvironment{#1}{#2}%
-}
-%    \end{macrocode}
-% \end{macro}
-%
-%
-% \begin{macro}{\@newverbenvironment}[4]{<environment name>}{<optional arguments included brackets or empty>}{<code for begin of environment>}{<code for end of environment>}
-%    \begin{macrocode}
-\long\def\@newverbenvironment#1#2#3#4{%
-    \newenvironment{#1}#2{%
-        \begingroup
-        \newverb@catcodes
-        \obeyspaces
-        #3%
-        \expandafter\@@Collectverbenv\expandafter{\@currenvir}{\long\def\BODY}%
-    }{#4}%
-}
-%    \end{macrocode}
-% \end{macro}
-%
-%
 % \begin{macro}{\newverbsfont}
 %    \begin{macrocode}
 \newcommand\newverbsfont{%
