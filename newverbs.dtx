@@ -133,7 +133,7 @@
 %
 % The new macro \Macro\MakeSpecialShortVerb*{\textbackslash\meta{verb variant}}{\textbackslash\meta{char}} does the same, but 
 % instead of \Macro\verb*\relax\relax\ it uses a \MacroArgs'\'<verb variant>*\relax which needs to be defined using \cs{newverbcommand}.
-% The package \pkg{shortvrb} must be loaded by the user in order to make this macro work. It is not loaded automatically by \pkg{newverbs}.
+% The package \pkg{shortvrb} must be installed in order to make this macro work. It is loaded automatically by \pkg{newverbs}.
 %
 % The special meaning of \meta{char} can be removed using \pkg{shortvrb}'s \cs{DeleteShortVerb}, i.e.\ the same way as for 
 % characters defined with the normal \cs{MakeShortVerb}.
@@ -170,7 +170,45 @@
 % The starred version will make spaces appear as `\Collectverb*{}: :' when typeset but still be written to auxiliary files as normal spaces.
 % An exception is if the following \meta{char} is `|{|', then `|}|' is taken as the end \meta{char} to simulate a normal argument to increase user friendliness.
 % Afterwards \meta{code} is expanded with \marg{verbatim material} direct behind it. This macro does not add any group around the code.
-% Should the code be typeset after all a proper font (e.g.\ \Macro\ttfamily or \Macro\verbatim@font) must be enabled manually.
+% Should the material be typeset after all a proper font (e.g.\ \Macro\ttfamily or \Macro\newverbsfont) must be enabled manually.
+%
+%
+%
+% \DescribeMacro\collectverbenv{<code>}
+% \DescribeMacro\collectverbenv*{<code>}
+% This macro is supposed to be used with its \marg{code} argument at the end of the begin-code of an user or package environment definition.
+% It then collects the content of the environment as verbatim material and feeds it as an argument to the provided \meta{code} like \Macro\collectverb does 
+% (see there for further details which also apply here).
+% This has the following limitations: 
+% When used the \Macro\begin of the environment must end with a line break, i.e.\ the source line must not include any other material afterwards.
+% If the environment is defined with arguments, which is supported, the line break must be after the arguments.
+% The \Macro\end of the macro must be at the beginning of an own source code line. 
+% If this conditions are not met incorrect results or an error may occur. Currently trailing material on the \Macro\begin line is simply ignored, but this
+% behaviour might change in future versions.
+% 
+% Example usage: |\newenvironment{myenv}{\maybesomeothercode\collectverbenv{\mycmd}}{\someendcode}|
+%
+% The starred version will make the spaces inside the environment appear as `\collectverb*{}: :'.
+%
+%
+% \DescribeMacro\Collectverbenv{<code>}
+% \DescribeMacro\Collectverbenv*{<code>}
+% This macro works like \Macro\collectverbenv but collects the environment content as plain verbatim material suitable to be 
+% written in auxiliary files or log messages.
+% After collecting the environment the \meta{code} is expanded with \marg{verbatim material} direct behind it. This macro does not add any group around the code.
+% Should the material be typeset after all a proper font (e.g.\ \Macro\ttfamily or \Macro\newverbsfont) must be enabled manually.
+%
+% The starred version will make spaces appear as `\Collectverb*{}: :' when typeset but still be written to auxiliary files as normal spaces.
+%
+%
+%
+% \DescribeMacro\newverbenvironment{<environment name>}[<number of arguments>][<default value>]{<code for begin of environment>}{<code for end of environment>}
+%
+%
+% \DescribeMacro\newverbsfont
+% Macro which activates the font used by the \pkg{newverbs} package for the verbatim text.
+% This macro can be used manually if verbatim material collected with \Macro\Collectverb or \Macro\Collectverbenv should be typeset afterall.
+%
 %
 % \DescribeMacro\Verbdef<\textbackslash macro><char><verbatim material><char>
 % \DescribeMacro\Verbdef*<\textbackslash macro><char><verbatim material><char>

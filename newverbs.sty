@@ -24,7 +24,7 @@
 % \end{macro}
 % \end{macro}
 %
-% \begin{macro}{\new@verbcommand}[1]{underlying definition macro}
+% \begin{macro}{\new@verbcommand}[2]{underlying definition macro}{macro to be defined}
 % Checks for optional argument and calls \cs{new@@verbcommand} accordingly.
 %    \begin{macrocode}
 \def\new@verbcommand#1#2{%
@@ -322,7 +322,7 @@
 % \end{macro}
 %
 %
-% \begin{macro}{\@Collectverb}
+% \begin{macro}{\@Collectverb}[1]{<code to be executed afterwards>}
 %    \begin{macrocode}
 \def\@Collectverb#1{%
     \verb@eol@error
@@ -335,7 +335,7 @@
 % \end{macro}
 %
 %
-% \begin{macro}{\@sCollectverb}
+% \begin{macro}{\@sCollectverb}[1]{<code to be executed afterwards>}
 %    \begin{macrocode}
 \def\@sCollectverb#1{%
     \verb@eol@error
@@ -347,7 +347,7 @@
 % \end{macro}
 %
 %
-% \begin{macro}{\@@Collectverb}
+% \begin{macro}{\@@Collectverb}[2]{<code to be executed afterwards>}{<delimiter character>}
 %    \begin{macrocode}
 \def\@@Collectverb#1#2{%
     \ifnum`#2=`\{%
@@ -383,7 +383,7 @@
 % \end{macro}
 %
 %
-% \begin{macro}{\@Collectverbenv}
+% \begin{macro}{\@Collectverbenv}[1]{<code to be executed afterwards>}
 %    \begin{macrocode}
 \def\@Collectverbenv#1{%
     \newverb@catcodes
@@ -419,7 +419,7 @@
 % \end{macro}
 %
 %
-% \begin{macro}{\@sCollectverbenv}
+% \begin{macro}{\@sCollectverbenv}[1]{<code to be executed afterwards>}
 %    \begin{macrocode}
 \def\@sCollectverbenv#1{%
     \newverb@catcodes
@@ -450,12 +450,21 @@
 % \end{macro}
 %
 %
-% \begin{macro}{\newverbenvironment}
+% \begin{macro}{\newverbenvironment}[2]{<environment name>}{<everything till the opening brace>}
+% The trailing |#| is a special \TeX{} syntax to catch everything till the opening brace.
+% See "The \TeX Book", page 204 for further explanation.
+% The \cmd{newcommand} is used empty beforehand for the does-already-exist test.
 %    \begin{macrocode}
 \newcommand\newverbenvironment{}
 \long\def\newverbenvironment#1#2#{%
     \@newverbenvironment{#1}{#2}%
 }
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\@newverbenvironment}[4]{<environment name>}{<optional arguments included brackets or empty>}{<code for begin of environment>}{<code for end of environment>}
+%    \begin{macrocode}
 \long\def\@newverbenvironment#1#2#3#4{%
     \newenvironment{#1}#2{%
         \begingroup
@@ -490,7 +499,7 @@
 % \end{macro}
 %
 %
-% \begin{macro}{\@Verbdef}
+% \begin{macro}{\@Verbdef}[2]{<star or empty>}{<macro to be defined>}
 %    \begin{macrocode}
 \newcommand*\@Verbdef[2]{%
     \Collectverb#1{\def#2}%
