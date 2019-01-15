@@ -205,6 +205,19 @@
 % Macro which activates the font used by the \pkg{newverbs} package for the verbatim text.
 % This macro can be used manually if verbatim material collected with \Macro\Collectverb or \Macro\Collectverbenv should be typeset afterall.
 %
+% \DescribeMacro\verbdef<\textbackslash macro><char><verbatim material><char>
+% \DescribeMacro\verbdef*<\textbackslash macro><char><verbatim material><char>
+% \DescribeMacro\verbdef<\textbackslash macro>{<verbatim material>}
+% \DescribeMacro\verbdef*<\textbackslash macro>{<verbatim material>}
+% This macro defines the \meta{\textbackslash macro} as a robust macro which typesets the \meta{verbatim material} in the usual verbatim font.
+% For this the material is placed in a brace group with \Macro\newverbsfont. If a different font is wanted, this macro can be redefined locally.
+% 
+% If the \meta{\textbackslash macro} existed before it will be overwritten silently. If an error should be raced instead use
+% \Macro\newcommand{\textbackslash macro}{} just before the \Macro\verbdef.
+%
+% Note that this macro is also provided by the \pkg{verbdef} package. If that package is loaded as well it definition of this macro is used, 
+% independent on the order of loading the two packages.
+%
 %
 % \DescribeMacro\Verbdef<\textbackslash macro><char><verbatim material><char>
 % \DescribeMacro\Verbdef*<\textbackslash macro><char><verbatim material><char>
@@ -212,7 +225,12 @@
 % \DescribeMacro\Verbdef*<\textbackslash macro>{<verbatim material>}
 % This macro uses \Macro\Collectverb internally to define \meta{\textbackslash macro} as the plain \meta{verbatim material}.
 % This can be used to define macros for special characters, so these can be used in error or warning messages or be written into auxiliary files.
-% A corresponding \Macro\verbdef macro which defines macros with typesetable verbatim material is already provided by the \pkg{verbdef} package.
+% 
+% If the \meta{\textbackslash macro} existed before it will be overwritten silently. If an error should be raced instead use
+% \Macro\newcommand{\textbackslash macro}{} just before the \Macro\Verbdef.
+%
+% Note that for maximum flexibility the such defined macros are not defined as robust macros. Therefore using them inside sectioning commands they should
+% be protected using \Macro\protect to avoid syntax issues in the |.aux| file due to verbatim characters.
 %
 %
 % \section{Compatibility with other verbatim packages}
