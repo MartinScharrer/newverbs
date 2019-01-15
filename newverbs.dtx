@@ -185,10 +185,12 @@
 % The \Macro\end of the macro must be at the beginning of an own source code line. 
 % If this conditions are not met incorrect results or an error may occur. Currently trailing material on the \Macro\begin line is simply ignored, but this
 % behaviour might change in future versions.
-% 
-% Example usage: |\newenvironment{myenv}{\maybesomeothercode\collectverbenv{\mycmd}}{\someendcode}|
 %
 % The starred version will make the spaces inside the environment appear as `\collectverb*{}: :'.
+% 
+% \noindent Example usage:\\
+% \leavevmode\noindent\bgroup\footnotesize
+% |\newenvironment{myenv}{\maybesomeothercode\collectverbenv{\mycmd}}{\someendcode}| \\
 %
 %
 % \DescribeMacro\Collectverbenv{<code>}
