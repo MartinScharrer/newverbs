@@ -155,13 +155,45 @@
 \RequirePackage{shortvrb}
 %    \end{macrocode}
 %
-% \begin{macro}{\@MakeSpecialShortVerb}[2]{star or empty}{verbatim macro}
+% \begin{macro}{\MakeShortVerb}
+%    \begin{macrocode}
+\def\MakeShortVerb{%
+  \@ifstar
+    {\newverbs@MakeShortVerb*}%
+    {\newverbs@MakeShortVerb{}}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\newverbs@MakeShortVerb}[1]{star or empty}
+%    \begin{macrocode}
+\def\newverbs@MakeShortVerb#1{%
+  \@ifnextchar[%
+    {\newverbs@@MakeShortVerb{#1}}%
+    {\@MakeSpecialShortVerb{#1}{\verb}}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\newverbs@@MakeShortVerb}[2]{star or empty}{verbatim macro}
+%    \begin{macrocode}
+\def\newverbs@@MakeShortVerb#1[#2]{%
+  \@MakeSpecialShortVerb{#1}{#2}%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\@MakeSpecialShortVerb}[3]{star or empty}{verbatim macro}{escaped short verbatim character}
 % Uses the definition of \cs{MakeShortVerb} from \pkg{shortvrb} except with \cs{verb} replaced with the first argument.
 % The last argument is then read by \cs{@MakeShortVerb}.
 %    \begin{macrocode}
-\def\@MakeSpecialShortVerb#1#2{%
-  \providecommand{#2}{\verb}%
-  \def\@shortvrbdef{#2#1}\@MakeShortVerb
+\def\@MakeSpecialShortVerb#1#2#3{%
+  %\expandafter\ifx\csname cc\string#3\endcsname\relax
+  %\else
+  %  \DeleteShortVerb{#3}%
+  %\fi
+  \def\@shortvrbdef{#2#1}%
+  \@MakeShortVerb{#3}%
 }
 %    \end{macrocode}
 % \end{macro}
