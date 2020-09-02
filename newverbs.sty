@@ -42,6 +42,7 @@
 \let\newverbs@end\@empty
 \def\new@@verbcommand#1#2[#3]#4#5{%
   #1*#2{%
+    \relax\ifmmode\hbox\else\leavevmode\null\fi
     \bgroup
     \newverbcommand@settings
     \ifx\newverbs@end\@empty
