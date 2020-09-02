@@ -1,0 +1,6 @@
+syntax: glob
+build
+tds
+newverbs.pdf
+newverbs.zip
+newverbs.tds.zip
