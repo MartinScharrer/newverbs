@@ -23,10 +23,10 @@
 %<*driver>
 \ProvidesFile{newverbs.dtx}[%
 %<=*DATE>
-    2020/09/02
+    2020/21/22
 %<=/DATE>
 %<=*VERSION>
-    v1.5
+    v1.6
 %<=/VERSION>
     newverbs DTX file]
 \documentclass{ydoc}
@@ -70,6 +70,7 @@
 % \changes{v1.3}{2011/07/24}{Added macros to collect verbatim arguments.}
 % \changes{v1.4}{2019/09/09}{Added several suggested changes.}
 % \changes{v1.5}{2020/09/02}{Added support for mathmode.}
+% \changes{v1.6}{2020/12/22}{Added support for mathmode.}
 %
 % \DoNotIndex{\newcommand,\newenvironment,\providecommand}
 %
@@ -88,13 +89,15 @@
 %
 % \subsection{Defining new variants of \cs{verb}}
 %
-% \DescribeMacro\newverbcommand     {<\textbackslash macro>}{<code before>}{<code after>}
-% \DescribeMacro\renewverbcommand   {<\textbackslash macro>}{<code before>}{<code after>}
-% \DescribeMacro\provideverbcommand {<\textbackslash macro>}{<code before>}{<code after>}
-% This macros allow the definition of \cs{verb} variants. The verbatim content is processed using \cs{verb}, but the
-% variants can add \TeX\ code before and after it.
-% The three definition macros use |\newcommand*|, |\renewcommand*| and |\providecommand*| internally to define \meta{macro}, respectively.
-% Afterwards \meta{macro} can be used like \cs{verb}. The star version of \meta{macro} will use \cs{verb}|*|.
+% \DescribeMacro\newverbcommand     {<\textbackslash macro>}[<\textbackslash verbmacro>]{<code before>}{<code after>}
+% \DescribeMacro\renewverbcommand   {<\textbackslash macro>}[<\textbackslash verbmacro>]{<code before>}{<code after>}
+% \DescribeMacro\provideverbcommand {<\textbackslash macro>}[<\textbackslash verbmacro>]{<code before>}{<code after>}
+% This macros allow the definition of \cs{verb} variants.
+% The verbatim content is first processed using \meta{\textbackslash verbmacro} which defaults to \cs{verb}, then the
+% given \TeX\ code is added before and afterwards.
+% The three definition macros use |\newcommand*|, |\renewcommand*| and |\providecommand*| internally to define \meta{\textbackslash macro}, respectively.
+% Afterwards \meta{\textbackslash macro} can be used like \cs{verb}. 
+% The star version of \meta{\textbackslash macro} will use \meta{\textbackslash verbmacro}|*| (default: \cs{verb}|*|).
 %
 % See the implementation of \cs{qverb} in section~\ref{sec:impl} for an example.
 %
