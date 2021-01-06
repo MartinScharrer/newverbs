@@ -507,7 +507,7 @@
 % \begin{macro}{\@Verbdef}[2]{<star or empty>}{<macro to be defined>}
 %    \begin{macrocode}
 \def\@Verbdef#1#2{%
-    \Collectverb#1{\def#2}%
+    \Collectverb#1{\DeclareRobustCommand#2}%
 }
 %    \end{macrocode}
 % \end{macro}
