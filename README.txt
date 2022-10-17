@@ -1,6 +1,6 @@
 The 'newverbs' LaTeX package
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Copyright (c) 2010-2021 by Martin Scharrer <martin@scharrer-online.de>
+Copyright (c) 2010-2022 by Martin Scharrer <martin.scharrer@web.de>
 Code repository: https://sourceforge.net/projects/newfloat/
 
 This package allows the definition of \verb variants which add TeX code before
