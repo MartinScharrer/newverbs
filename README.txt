@@ -1,7 +1,8 @@
 The 'newverbs' LaTeX package
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Copyright (c) 2010-2022 by Martin Scharrer <martin.scharrer@web.de>
-Code repository: https://sourceforge.net/projects/newfloat/
+Code repository: https://github.com/MartinScharrer/newverbs
+Issues: https://github.com/MartinScharrer/newverbs/issues
 
 This package allows the definition of \verb variants which add TeX code before
 and after the verbatim text (e.g. quotes or \fbox{}).  When used together with
